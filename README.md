@@ -3,8 +3,8 @@
 ![LED indikace v akci](<pictures/Test LED board.jpg>)
 
 ## Popis
-Při procházení internetu jsem nalezl přepínače pro kernely a funkční ROM, ale buď to bylo jen pro kernely, nebo jen pro funkční ROM. Většinou se jednalo o přepínače ovládané z klávesnice s velkým množstvím vodičů uvnitř počítače.
-Potřeboval jsem něco, co půjde ovládat jednoduše příkazy z klávesnice, nebo přes webové rozhraní. Taky mě děsila představa velkého množství vodičů (a tím pádem potencionálních problémů) uvnitř počítače. Proto jsem se rozhodl, že si postavím vlastní přepínač kernelů.
+Při procházení internetu jsem nalezl přepínače pro kernely a funkční ROM, ale buď to bylo jen pro kernely, nebo jen pro funkční ROM. Většinou se jednalo o přepínače ovládané z kláv[...]
+Potřeboval jsem něco, co půjde ovládat jednoduše příkazy z klávesnice, nebo přes webové rozhraní. Taky mě děsila představa velkého množství vodičů (a tím pádem potencionálních [...]
 Začal jsem realizovat svoji představu, a sepsal jsem si požadavky na ovládání:
 - ovládání z klávesnice nějakým příkazem
 - ovládání přes webové rozhraní
@@ -13,7 +13,7 @@ Začal jsem realizovat svoji představu, a sepsal jsem si požadavky na ovládá
 
 ![Ověřování nápadu na breadboardu](<pictures/Prototyping on breadboard.jpg>)
 
-Nakonec se mi podařilo vytvořit řídící desku, která je s počítačem spojena pouze přes patice IO, které jsou na desce vhodně umístěné u sebe. Pro indikaci jsem navrhnul druhou desku, která je s řídící deskou spojena čtyřmi vodiči. Veškerá komunikace s počítačem probíhá pouze pomocí signálů na řídící desce pomocí vhodných propojení IO. Použití řídící desky neovlivní žádnou obvyklou funkci počítače. Funguje s jakýmikoli kernely a funkčními rom, (včetně JiffyDOS atp.) a to jak v módu C128, tak C64. A jak to celé funguje? Zde je popis jednotlivých částí:
+Nakonec se mi podařilo vytvořit řídící desku, která je s počítačem spojena pouze přes patice IO, které jsou na desce vhodně umístěné u sebe. Pro indikaci jsem navrhnul druhou desku, k[...]
 
 > ### **Software**
 
@@ -29,20 +29,19 @@ Uvedený software je vytvořen v PlatformIO, ale měl by fungovat i v jiných ID
 
 Program využívá mimo jiné knihovny i knihovnu [IECDevice](https://github.com/dhansel/IECDevice)
 
-Před kompilací a nahráním do ESP32 je potřeba změnit hodnoty v jednotlivých konfiguračních souborech ve složce „data“. Po změně hodnot je potřeba nejdříve nahrát konfigurační soubory do ESP32 data do LittleFS, společně se soubory pro webového rozhraní. Webové rozhraní funguje v asynchronním režimu, takže se hodnoty změní na PC nebo chytrém telefonu bez nutnosti obnovovat stránku ručně.
-Poté nahrát hlavní program do ESP32. Pokud pořadí obrátíte, nic se nestane, akorát se běh programu okamžitě zastaví, a Commodore zůstane v trvalém resetu.
-Názvy konfiguračních souborů jsou pevně dané a nelze je měnit! (pokud tedy nezměníte tyto názvy i v samotném programu). Nastavené hodnoty (zvolené kernely a ROM) se uchovávají i po vypnutí počítače, takže při dalším spuštění zůstane C128 v poslední konfiguraci.
+Před kompilací a nahráním do ESP32 je potřeba změnit hodnoty v jednotlivých konfiguračních souborech ve složce „data“. Po změně hodnot je potřeba nejdříve nahrát konfigurační soubory do LittleFS a teprve potom nahrajte program. Pokud pořadí obrátíte, nic se nestane, akorát se běh programu okamžitě zastaví, a Commodore zůstane v trvalém resetu.
+Názvy konfiguračních souborů jsou pevně dané a nelze je měnit! (pokud tedy nezměníte tyto názvy i v samotném programu). Nastavené hodnoty (zvolené kernely a ROM) se uchovávají i po vypnutí.
 
-Standartně je program nastavený bez režimu ladění (na serial výstupu z ESP32 se neobjeví žádná data informující o průběhu programu). Pokud program z nějakého důvodu nefunguje, a jsou potřeba diagnostická data z běhu programu, je potřeba v souboru „settings.h“ odkomentovat řádek 47 (DebugON).
+Standartně je program nastavený bez režimu ladění (na serial výstupu z ESP32 se neobjeví žádná data informující o průběhu programu). Pokud program z nějakého důvodu nefunguje, a jsou k dispozici vhodné nástroje, je možné zapnout režim ladění.
 
 | Konfigurační soubor (název) | popis |
 | ------------------ | -------------------------------------------------------- |
 | devicenr.txt | v tomto souboru je číslo zařízení (DEVICE ID) pro změnu kernelů pomocí příkazu LOAD. V souboru je nastavena výchozí hodnota na 12. |
 | U32ROM.txt, U35ROM.txt | počet a názvy kernelů.<br>  *Struktura souboru:*<br> Počet kernelů <br>  Jednotlivé názvy kernelů (limit 26 znaků) | 
-| U36ROM.txt | počet a názvy funkčních ROM. Pokud nebudete U36 využívat, napište do souboru místo počtu ROM nulu. <br> *Struktura souboru:*<br> Počet funkčních ROM (bez osazené patice U36 zde napište 0)<br>  Názvy funkčních ROM (limit 26 znaků) | 
+| U36ROM.txt | počet a názvy funkčních ROM. Pokud nebudete U36 využívat, napište do souboru místo počtu ROM nulu. <br> *Struktura souboru:*<br> Počet funkčních ROM (bez osazené patice U36) |  
 | U32stav.txt, U35stav.txt, U36stav.txt | soubory obsahují pouze číslo kernelu nebo ROM, které se spustí jako první (po každém uploadu LittleFS do ESP32). |  
 | wifi.txt | parametry pro připojení k WiFi <br>  *Struktura souboru:*<br> Název WiFi (SSID)<br> Heslo k této WiFi |
-| wifi_AP.txt | parametry pro vytvoření WiFi přístupového bodu (AP)<br>  *Struktura souboru:*<br> Název AP (SSID) (výchozí je „Commodore 128“) <br> Heslo k této WiFi – minimálně 8 znaků (výchozí je „Commodore“) |  
+| wifi_AP.txt | parametry pro vytvoření WiFi přístupového bodu (AP)<br>  *Struktura souboru:*<br> Název AP (SSID) (výchozí je „Commodore 128“) <br> Heslo k této WiFi – minimálně 8 znaků  |
 
 > **Poznámka 1:** Pokud program nalezne nějakou chybu v konfiguračních souborech, přejde Commodore to trvalého resetu a LED diody budou blikat červeně.<br> Možné chyby v konfiguraci:  
 > 1. Chyba DEVICE ID (zakázány jsou tyto ID: 0, 1, 2, 4, 8, 9, 10, 11)  
@@ -51,37 +50,36 @@ Standartně je program nastavený bez režimu ladění (na serial výstupu z ESP
 > 
 > Pokud budou v konfiguračních souborech méně ROM, než je maximum povolených, neobsazené pozice budou mít automaticky název „NONE“  
 
-> **Poznámka 2** pokud se nelze připojit k dané WiFi, bude fungovat ovládání přes internet pouze pomocí přístupu přes AP. Výchozí IP adresa je 10.10.10.10. Pokud chcete změnit IP adresu pro AP, změňte v src/settings.cpp řádky 5 až 8 (pouze v případě, že dochází ke konfliktu s jinými WiFi sítěmi).
+> **Poznámka 2** pokud se nelze připojit k dané WiFi, bude fungovat ovládání přes internet pouze pomocí přístupu přes AP. Výchozí IP adresa je 10.10.10.10. Pokud chcete změnit IP adresu...
 
-> **POZOR!** Přepínač je navržen tak, aby při jakékoli chybě v softwaru nebo chybějícímu hardware zastavil činnost a držel Commodore v permanentním resetu! Nelze tedy provozovat přepínač bez desky indikace! Pokud by jste i přes to nepotřebovali indikaci, je potřeba změnit řídící software přepínače.  
+> **POZOR!** Přepínač je navržen tak, aby při jakékoli chybě v softwaru nebo chybějícímu hardware zastavil činnost a držel Commodore v permanentním resetu! Nelze tedy provozovat přepínač...
 
 #### **OVLÁDÁNÍ SWITCHERU:**
 
-Kernely je možné měnit přímo z Commodoru pomocí příkazu (D)LOAD (nevýhodou je ovšem to, že je potřeba si napsat nebo pamatovat pozice jednotlivých kernelů pro každou EPROM), nebo programem ke switcheru, vytvořenému i pro přepínání kernelů.  
+Kernely je možné měnit přímo z Commodoru pomocí příkazu (D)LOAD (nevýhodou je ovšem to, že je potřeba si napsat nebo pamatovat pozice jednotlivých kernelů pro každou EPROM), nebo přes program a webové rozhraní.
 
 Změna kernelů a funkčních ROM pomocí příkazu (D)LOAD:  
 
 *Syntaxe:*  
 LOAD “U32#1U35#1U36#1“, ID  
 
-Klíčové výrazy jsou **U32#n, U35#n, U36#n,** kde n udává číslo ROM, do které se má příslušný EPROM přepnout. ID je číslo zadané v konfiguračním souboru devicenr.txt. Pokud jsou ty to čísla mimo limit uvedený v konfiguračním souboru, nedojde k žádné změně. Nezáleží na pořadí přepínačů, ani na správnosti zadávaného textu, pokud se nenajde klíčový výraz, nic se nestane.  
+Klíčové výrazy jsou **U32#n, U35#n, U36#n,** kde n udává číslo ROM, do které se má příslušný EPROM přepnout. ID je číslo zadané v konfiguračním souboru devicenr.txt. Pokud jsou tyto hodnoty vše správně, proběhne přepnutí a následný reset.
 
 Příklad: LOAD“JER**U32#3**GR**U36#5**“, ID  
-Jedná se korektní výraz, U32 se přepne na kernel č.3 a U36 na funkční ROM č. 5
+Jedná se korektní výraz, U32 se přepne na kernel č.3 a U36 na funkční ROM č. 5  
 Poznámka:	pokud se jakýmkoli způsobem změní kernel nebo funkční ROM, provede se okamžitý RESET!
 
 *Změna kernelů pomocí programu a webového rozhraní:*  
-Pro získání IP adres slouží program „SWITCHER CONTROL.PRG“, který pro nahrání a spuštění vypíše na obrazovku IP adresy pro připojení z PC a IP adresu pro připojení přes AP (např. z chytrého telefonu).  
-Program „SWITCHER CONTROL.PRG“ komunikuje přes User port, sériově rychlostí 1200 baud (User port je ovládán přes optočleny, které fungují zároveň jako převodník úrovní). Program kromě IP adres načítá z přepínače aktuální čísla ROM, jejich názvy a device ID. Ve výchozím menu jsou zobrazeny aktuálně zvolené ROM, které lze pomocí šipek a klávesy Return dále měnit pomocí pull-down menu. Poslední volbou je „Confirm selected choice“, která po upozornění na okamžitý reset Commodoru zvolené hodnoty pošle zpět do ESP32.
+Pro získání IP adres slouží program „SWITCHER CONTROL.PRG“, který pro nahrání a spuštění vypíše na obrazovku IP adresy pro připojení z PC a IP adresu pro připojení přes AP (například z telefonu). Program „SWITCHER CONTROL.PRG“ komunikuje přes User port, sériově rychlostí 1200 baud (User port je ovládán přes optočleny, které fungují zároveň jako převodník úrovní).
 
 ![Webové rozhraní](<pictures/web main screen.png>)  
 
-Kernely lze měnit pomocí jednoduchého webového rozhraní na PC nebo chytrém telefonu (klidně i současně). Na jediné obrazovce se objeví obrázek desky, kde jsou IO zabarveny odstínem podle zvoleného kernelu (barvy jsou stejné jak na RGB LED v Commodoru, tak i na webovém rozhraní). Pokud není osazena Function ROM U36, a je tato skutečnost nakonfigurována v souboru U36ROM.txt (počet kernelů nastaven na hodnotu 0), bude U36 na obrázku desky přeškrtnutá a nebude možno zvolit žádnou ROM (tlačítka budou neaktivní). Třetí RGB LED určená pro hodnotu ROM nebude svítit (jako by byl vybrán kernel č.8). Tuto skutečnost nelze žádným způsobem detekovat, prosím tedy o dodržení instrukcí a změnu v U36ROM.txt.
+Kernely lze měnit pomocí jednoduchého webového rozhraní na PC nebo chytrém telefonu (klidně i současně). Na jediné obrazovce se objeví obrázek desky, kde jsou IO zabarveny odstínem podle aktuálního stavu.
 
 ### Naprogramování E(E)PROM  
 Naprogramování EPROM, nebo lépe EEPROM záleží čistě na vašich potřebách, lze nalézt spoustu kernelů pro mód C64, pouze několik pro C128, a dostatek ROM pro funkční ROM.  
 #### *Struktura kernelů pro C64:*
-Každý slot je složený z kernelu pro basic (8k) a dalšího kernelu (např. JiffyDos) (8k), takže jeden slot má 16 kb. Všechny zvolené kernely je potřeba spojit do jednoho .bin souboru (lze použít např. [BIN Wizard](https://github.com/r1me/BINWizard)) a poté naprogramovat do EEPROM. Zvolil jsem EEPROM pro snadnější změnu kernelů (pokud bude potřeba).
+Každý slot je složený z kernelu pro basic (8k) a dalšího kernelu (např. JiffyDos) (8k), takže jeden slot má 16 kb. Všechny zvolené kernely je potřeba spojit do jednoho .bin souboru (lze použít software potřebný pro programování EPROM).
 
 <table border="1" cellpadding="4" cellspacing="0">
   <thead>
@@ -124,7 +122,7 @@ Lze nalézt již hotové kernely, které mají 16 kb
 
 #### *Struktura pro Funkční ROM:*
 každá funkční ROM má 32 kb. Lze jich nalézt celkem dost.  
-Pokud by jste chtěli nějaké vlastní programy, které by jste chtěli mít po ruce po spuštění, lze pro vytvoření vlastní funkční ROM využít program [StartApps](https://pastbytes.com/startapps/). Upravit a zkompilovat to pro vlastní programy není složité. Můžete také využít již hotové StartAppsy, které naleznete na webu. Pokud se rozhodnete pro vlastní programy, mějte na paměti, že se všechny musejí vejít do 32 kb včetně obslužného programu.  
+Pokud by jste chtěli nějaké vlastní programy, které by jste chtěli mít po ruce po spuštění, lze pro vytvoření vlastní funkční ROM využít program [StartApps](https://pastbytes.com/startapps/).
 Doporučuji každou vlastní StartApps vyzkoušet v emulátoru C128 na PC (např. VICE).
 
 <table border="1" cellpadding="4" cellspacing="0">
@@ -143,15 +141,15 @@ Doporučuji každou vlastní StartApps vyzkoušet v emulátoru C128 na PC (nap�
   </tbody>
 </table>
 
-> **DŮLEŽITÉ UPOZORNĚNÍ:** Nevkládejte do přepínače jiné typy EPROMů, než je uvedeno v seznamu součástek nebo jinak naprogramované! Nebude to fungovat a mohlo by dojít k poškození počítače!  
+> **DŮLEŽITÉ UPOZORNĚNÍ:** Nevkládejte do přepínače jiné typy EPROMů, než je uvedeno v seznamu součástek nebo jinak naprogramované! Nebude to fungovat a mohlo by dojít k poškození počítače.
 ###  
 
 > ### **Hardware**  
 
 #### **Návrh a realizace**
 Pro ovládání jsem zvolil ESP32, kvůli kompatibilitě s knihovnami, které jsem chtěl použít.  
-Pro ovládání se dá použít jakýkoli počítač nebo chytrý telefon připojený na stejnou WiFi jako je přepínač, nebo se lze připojit přímo na ESP32, který má vytvořen vlastní přístupový bod (AP).  
-Pro indikaci, která ROM je aktuálně nastavena, slouží trojice RGB LED umístěná místo LED, která signalizovala zapnutí počítače. LED diody signalizují barvou stav aktivní ROM v pořadí U32 – U35 – U36  
+Pro ovládání se dá použít jakýkoli počítač nebo chytrý telefon připojený na stejnou WiFi jako je přepínač, nebo se lze připojit přímo na ESP32, který má vytvořen vlastní přístupový bod.
+Pro indikaci, která ROM je aktuálně nastavena, slouží trojice RGB LED umístěná místo LED, která signalizovala zapnutí počítače. LED diody signalizují barvou stav aktivní ROM v pořadí...
 
 <table border="1" cellpadding="4" cellspacing="0">
   <thead>
@@ -231,7 +229,7 @@ Pro kernely U32 a funkční ROM U36 lze využít maximálně 8 pozic, pro kernel
 | **Ostatní materiál** |
 | distanční sloupky | M3, 10 mm | 2 |  
 
-Po kompletním osazení doporučuji vše odzkoušet „na stole“, zda-li vše funguje tak, jak má. Pro napájení použijte externí zdroj. Teprve po úspěšném testu bych přepínač zabudoval do počítače.  
+Po kompletním osazení doporučuji vše odzkoušet „na stole“, zda-li vše funguje tak, jak má. Pro napájení použijte externí zdroj. Teprve po úspěšném testu bych přepínač zabudoval do C128.
 > **Pro instalaci přepínače je zapotřebí, aby IO U32, (U33, U34), U35, U36, U4 a U30 měly na desce C128 patice (nejlépe obyčejné, ne precizní).**
 
 ## Detaily z montáže
@@ -351,4 +349,4 @@ Po kompletním osazení doporučuji vše odzkoušet „na stole“, zda-li vše 
 ![Pohled z boku na uzavřený počítač](<pictures/side detail.jpg>)
 *Pohled z boku na uzavřený počítač*
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/MIrIOL5VtSE" frameborder="0" allowfullscreen></iframe>
+[Watch the video on YouTube](https://www.youtube.com/watch?v=MIrIOL5VtSE)
