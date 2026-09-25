@@ -351,6 +351,4 @@ Po kompletním osazení doporučuji vše odzkoušet „na stole“, zda-li vše 
 ![Pohled z boku na uzavřený počítač](<pictures/side detail.jpg>)
 *Pohled z boku na uzavřený počítač*
 
-<iframe 
-width="560" height="315" src="https://www.youtube-nocookie.com/embed/MIrIOL5VtSE" frameborder="0" allowfullscreen>
-</iframe>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/MIrIOL5VtSE" frameborder="0" allowfullscreen></iframe>
