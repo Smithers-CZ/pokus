@@ -373,5 +373,5 @@ Po kompletním osazení doporučuji vše odzkoušet „na stole“, zda-li vše 
 *Pohled z boku na uzavřený počítač*
 
 
-[![Přepínač v akci](https://img.youtube.com/vi/mKyUM33U5w/hqdefault.jpg)](https://www.youtube.com/watch?v=mKyUM33U5w)  
+[![Přepínač v akci](https://img.youtube.com/vi/-mKyUM33U5w/hqdefault.jpg)](https://www.youtube.com/watch?v=-mKyUM33U5w)  
 *Přepínač v akci*
